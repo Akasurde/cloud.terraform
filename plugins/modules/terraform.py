@@ -432,7 +432,9 @@ def process_complex_args(terraform_variables: AnyJsonType) -> str:
                 ret_out.append("{0}={1}".format(k, format_args(v)))
             else:
                 # only to handle anything unforeseen
-                raise TerraformError("Supported types are: dictionaries, lists, strings, integer_types, boolean and float.")
+                raise TerraformError(
+                    "Supported types are: dictionaries, lists, strings, integer_types, boolean and float."
+                )
     if isinstance(terraform_variables, list):
         l_out = []
         for item in terraform_variables:
@@ -444,7 +446,9 @@ def process_complex_args(terraform_variables: AnyJsonType) -> str:
                 l_out.append(format_args(item))
             else:
                 # only to handle anything unforeseen
-                raise TerraformError("Supported types are: dictionaries, lists, strings, integer_types, boolean and float.")
+                raise TerraformError(
+                    "Supported types are: dictionaries, lists, strings, integer_types, boolean and float."
+                )
 
         ret_out.append("[{0}]".format(",".join(l_out)))
     return ",".join(ret_out)
