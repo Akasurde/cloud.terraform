@@ -336,7 +336,7 @@ PY3 = sys.version_info[0] == 3
 if PY3:
     integer_types = (int,)
 else:
-    integer_types = (int, long)  # pylint: disable=undefined-variable
+    integer_types = (int, long)  # noqa: F821 pylint: disable=undefined-variable 
 
 
 def is_attribute_sensitive_in_providers_schema(
