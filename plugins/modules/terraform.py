@@ -308,6 +308,7 @@ stderr:
 
 import dataclasses
 import os
+import sys
 import tempfile
 from typing import List
 
@@ -329,6 +330,13 @@ from ansible_collections.cloud.terraform.plugins.module_utils.utils import (
     get_state_args,
     preflight_validation,
 )
+
+PY3 = sys.version_info[0] == 3
+
+if PY3:
+    integer_types = (int,)
+else:
+    integer_types = (int, long)  # pylint: disable=undefined-variable
 
 
 def is_attribute_sensitive_in_providers_schema(
@@ -420,11 +428,11 @@ def process_complex_args(terraform_variables: AnyJsonType) -> str:
                 ret_out.append("{0}={{{1}}}".format(k, process_complex_args(v)))
             elif isinstance(v, list):
                 ret_out.append("{0}={1}".format(k, process_complex_args(v)))
-            elif isinstance(v, (int, float, str, bool)):
+            elif isinstance(v, (integer_types, float, str, bool)):
                 ret_out.append("{0}={1}".format(k, format_args(v)))
             else:
                 # only to handle anything unforeseen
-                raise TerraformError("Supported types are, dictionaries, lists, strings, integers, boolean and float.")
+                raise TerraformError("Supported types are: dictionaries, lists, strings, integer_types, boolean and float.")
     if isinstance(terraform_variables, list):
         l_out = []
         for item in terraform_variables:
@@ -432,11 +440,11 @@ def process_complex_args(terraform_variables: AnyJsonType) -> str:
                 l_out.append("{{{0}}}".format(process_complex_args(item)))
             elif isinstance(item, list):
                 l_out.append("{0}".format(process_complex_args(item)))
-            elif isinstance(item, (str, int, float, bool)):
+            elif isinstance(item, (str, integer_types, float, bool)):
                 l_out.append(format_args(item))
             else:
                 # only to handle anything unforeseen
-                raise TerraformError("Supported types are, dictionaries, lists, strings, integers, boolean and float.")
+                raise TerraformError("Supported types are: dictionaries, lists, strings, integer_types, boolean and float.")
 
         ret_out.append("[{0}]".format(",".join(l_out)))
     return ",".join(ret_out)
